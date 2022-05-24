@@ -1,0 +1,18 @@
+#!/bin/bash
+
+ZET_FOLDER="$HOME"/zet
+ZET="$1"
+
+if [[ -z "$ZET" ]]
+then
+	echo "Goto: open zettelkasten with given name."
+	echo "Didn't provide a name. Exiting."
+	exit 1
+fi
+
+if [[ -f "$ZET_FOLDER"/"$ZET" ]]
+then
+	nvim "$ZET_FOLDER"/"$ZET" || vim "$ZET_FOLDER"/"$ZET"
+else
+	echo "Zettel $ZET doesn't exist."
+fi

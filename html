@@ -1,0 +1,22 @@
+#!/bin/bash
+
+BLOG_FOLDER="$HOME"/blog
+ENTRY="$1"
+ENTRY_HTML=$(basename "$ENTRY" .md).html
+HTML_PATH="$BLOG_FOLDER"/html/"$ENTRY_HTML"
+
+if [[ -z "$ENTRY" ]]
+then
+	echo "HTML - Create an HTML file from a .md one"
+	echo "No entry provided. Exiting."
+	exit 1
+fi
+
+if [[ ! -f "$ENTRY" ]]
+then
+	echo "File $ENTRY doesn't exist in the current directory. Exiting."
+	exit 1
+fi
+
+pandoc "$ENTRY" -o "$HTML_PATH" 
+echo "Created '$ENTRY_HTML' at '$HTML_PATH'"

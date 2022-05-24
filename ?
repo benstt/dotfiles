@@ -1,0 +1,29 @@
+#!/bin/bash
+
+# WARNING: do NOT use this script in production, it is dangerous. Thank you :)
+
+ZET_FOLDER="$HOME/zet"
+TAG=#$1
+COUNT=0
+
+if [[ -z $TAG ]]
+then
+	echo "No tag provided" 
+else
+	for f in $(ls "$ZET_FOLDER" | grep ".md")
+	do
+		CONTENT=$(cat "$ZET_FOLDER"/"$f")
+		if [[ "$CONTENT" == *"$TAG"* ]]; then
+			# Show the name as DATE - TITLE
+			echo "$f - $(head -n 1 "$ZET_FOLDER"/"$f" | cut -c 3-)" 
+			COUNT=$((COUNT+1))
+		fi
+	done
+
+	if [[ "$COUNT" == 0 ]]
+	then
+		echo "No files found with tag '$TAG'"
+	else
+		echo "Found $COUNT file(s) with tag '$TAG'"
+	fi
+fi

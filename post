@@ -1,0 +1,35 @@
+#!/bin/bash
+
+ZET_FOLDER=$HOME/zet
+BLOG_FOLDER=$HOME/blog
+ZET=$1
+TITLE=$2
+
+if [[ -z "$ZET" ]]
+then
+	echo "POST - Post an entry from a .md file"
+	echo "No Zettel provided. Exiting."
+	exit 1
+fi
+
+if [[ ! -f "$ZET" ]]
+then
+	echo "File $ZET doesn't exist in the current directory. Exiting."
+	exit 1
+fi
+
+if [[ -z "$TITLE" ]]
+then
+	echo "No title provided. Exiting."
+	exit 1
+fi
+
+if [[ "$TITLE" != *".md"* ]]
+then
+	TITLE=$TITLE.md
+fi
+
+ENTRY_PATH="$BLOG_FOLDER"/entries/"$TITLE"
+
+cp "$ZET_FOLDER"/"$ZET" "$ENTRY_PATH"
+echo "Created '$TITLE' at '$ENTRY_PATH'"
