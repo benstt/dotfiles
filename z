@@ -1,6 +1,6 @@
 #!/bin/bash
 
-date=$(date +%Y%M%d%H%S)
+date=$(date +%Y%m%d%H%S)
 zet_folder=~/zet
 
 nvim $zet_folder/"$date".md
