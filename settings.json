@@ -1,0 +1,46 @@
+{
+    "editor.fontSize": 18,
+    "editor.fontLigatures": true,
+    "workbench.iconTheme": "material-icon-theme",
+    "editor.fontFamily": "'Iosevka', 'JetBrains Mono SemiBold', 'Droid Sans Mono', 'monospace', monospace",
+    "workbench.colorTheme": "Gruvbox Dark Soft",
+    "vim.visualModeKeyBindings": [
+        {
+            "before": ["J"],
+            "commands": ["editor.action.moveLinesDownAction"]
+        },
+        {
+            "before": ["K"],
+            "commands": ["editor.action.moveLinesUpAction"]
+        },
+        {
+            "before": ["<Tab><Tab>"],
+            "commands": ["editor.action.commentLine"]
+        },
+        {
+            "before": ["<"],
+            "commands": ["editor.action.outdentLines"]
+        },
+        {
+            "before": [">"],
+            "commands": ["editor.action.indentLines"]
+        }
+    ],
+    "vim.insertModeKeyBindings": [
+        {
+            "before": ["j", "k"],
+            "after": ["<Esc>"]
+        },
+        {
+            "before": ["k", "j"],
+            "after": ["<Esc>"]
+        }
+    ],
+    "vim.normalModeKeyBindings": [
+        {
+            "before": ["<Tab><Tab>"],
+            "commands": ["editor.action.commentLine"]
+        }
+    ],
+    "editor.stickyScroll.enabled": true
+}
