@@ -33,6 +33,7 @@ Plug 'nvim-lualine/lualine.nvim' " Airline, but pure lua
 Plug 'xiyaowong/nvim-transparent' " Transparent background
 Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.0' } " Fzf but with syntax hightlighting!
 Plug 'lukas-reineke/indent-blankline.nvim' " A little line on indents
+Plug 'karb94/neoscroll.nvim' " Smooth scrolling
 
 " Snippets
 Plug 'hrsh7th/cmp-vsnip' 
@@ -99,6 +100,9 @@ nnoremap <Space>tt :TroubleToggle<cr>
 				types = "bold",
 			}
 		}
+	})
+	require('neoscroll').setup({
+		easing_function = "quadratic"
 	})
 
 	local cmp = require('cmp')
