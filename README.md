@@ -25,7 +25,7 @@ Copy `config.rasi` to `~/.config/rofi/`. \
 To call Rofi, hit `<M-r>` in Qtile.
 
 ## Tmux
-Install [Tmux Plugin Manager](git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm). \
+Install [Tmux Plugin Manager](https://github.com/tmux-plugins/tpm). \
 Two plugins only:
 - Resurrect, for persisting sessions
 - Themes! :)
