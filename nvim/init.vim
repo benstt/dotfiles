@@ -10,6 +10,15 @@ set termguicolors
 set undodir=$HOME/.vim/undo
 set undofile
 
+
+" Neovide specific
+if exists("g:neovide")
+	" set guifont=FiraCode\ Nerd\ Font\ Mono:h16:b
+	set guifont=FantasqueSansMono\ Nerd\ Font\ Mono:h16
+	let g:neovide_cursor_vfx_mode = "ripple"
+	let g:neovide_cursor_animation_length=0.05
+endif
+
 call plug#begin('~/.config/nvim/plugged')
 
 " Tools, colors and stuff
@@ -31,9 +40,13 @@ Plug 'folke/trouble.nvim' " Show pretty diagnostics
 Plug 'folke/lsp-colors.nvim' " More colors!
 Plug 'nvim-lualine/lualine.nvim' " Airline, but pure lua
 Plug 'xiyaowong/nvim-transparent' " Transparent background
-Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.0' } " Fzf but with syntax hightlighting!
+Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.0' } " Fzf but with syntax highlighting!
 Plug 'lukas-reineke/indent-blankline.nvim' " A little line on indents
 Plug 'karb94/neoscroll.nvim' " Smooth scrolling
+Plug 'akinsho/bufferline.nvim', { 'tag': 'v3.*' } " Bar on top
+Plug 'nvim-tree/nvim-tree.lua' " Nerd tree
+Plug 'ziglang/zig.vim' " Zig syntax highlighting
+Plug 'eandrju/cellular-automaton.nvim' " ... :)
 
 " Snippets
 Plug 'hrsh7th/cmp-vsnip' 
@@ -56,6 +69,12 @@ colorscheme duskfox
 vmap < <gv
 vmap > >gv
 
+" Use ctrl-[hjkl] to select the active split!
+nnoremap <silent> <c-k> <c-w>k<CR>
+" nnoremap <silent> <c-j> <c-w>j<CR>
+nnoremap <silent> <c-h> <c-w>h<CR>
+nnoremap <silent> <c-l> <c-w>l<CR>
+
 " Go back to normal mode with 'jk'
 inoremap jk <Esc>
 
@@ -72,10 +91,19 @@ nmap <Space><Space> :Telescope find_files<CR>
 " Live grep everything!
 nmap <Space>g :Telescope live_grep<CR>
 
+" Toggle file tree
+nmap <Space><Tab> :NvimTreeToggle<CR>
+
 " Open Trouble
-nnoremap <Space>tt :TroubleToggle<cr>
+nnoremap <Space>tt :TroubleToggle<CR>
+
+nmap <Space>fml :CellularAutomaton make_it_rain<CR>
 
 :lua <<EOF
+	-- nvim-tree specific
+	vim.g.loaded_netrw = 1
+	vim.g.loaded_netrwPlugin =1
+
 	-- ============ PLUGIN SETUPS ============ -- 
 	require('gitsigns').setup()
 	require('crates').setup()
@@ -84,6 +112,12 @@ nnoremap <Space>tt :TroubleToggle<cr>
 	require('rust-tools').setup()
 	require('rust-tools').inlay_hints.enable() -- Enable hints by default
 	require('lualine').setup()
+	require('nvim-tree').setup()
+	require('bufferline').setup({
+		options = {
+			separator_style = "thick"
+		}
+	})
 	require('lsp_signature').setup({
 		bind = true,
 		hint_prefix = "🌼 ",
@@ -103,6 +137,13 @@ nnoremap <Space>tt :TroubleToggle<cr>
 	})
 	require('neoscroll').setup({
 		easing_function = "quadratic"
+	})
+	require('nvim-treesitter.configs').setup({
+		ensure_installed = { "c", "go", "rust" },
+
+		highlight = {
+			enable = true,
+		}
 	})
 
 	local cmp = require('cmp')
@@ -327,4 +368,23 @@ nnoremap <Space>tt :TroubleToggle<cr>
 			["rust-analyzer"] = {}
 		}
 	})
+
+	require('lspconfig')['zls'].setup({
+		on_attach = on_attach,
+		flags = lsp_flags,
+		settings = {
+			["zls"] = {}
+		}
+	})
+
+	require('lspconfig')['pyright'].setup({
+		on_attach = on_attach,
+		flags = lsp_flags,
+		settings = {
+			["pyright"] = {}
+		}
+	})
+
+	require('lspconfig')['gopls'].setup({})
+	require('lspconfig')['clangd'].setup({})
 EOF

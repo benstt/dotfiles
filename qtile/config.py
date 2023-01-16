@@ -142,7 +142,7 @@ screens = [
                     name_transform=lambda name: name.upper(),
                 ),
                 widget.TextBox("Press &lt;M-r&gt; to spawn", foreground="#d75f5f"),
-                widget.Clock(format="%d-%m-%Y %H:%m"),
+                widget.Clock(format="%d-%m-%Y %H:%M"),
                 widget.QuickExit(fmt="[ !! ]"),
             ],
             20,
