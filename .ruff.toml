@@ -1,0 +1,55 @@
+select = [
+	"E",
+	"F",
+	"W",
+	"I",
+	"N",
+	"ANN",
+	"ARG",
+
+	# Docstring style
+	"D101",
+	"D201",
+	"D204",
+	"D207",
+	"D208",
+	"D209",
+	"D211",
+	"D213",
+	"D402",
+	"D403",
+	"D404",
+	"D419",
+
+	"UP003",
+	"UP004",
+	"UP006",
+	"UP008",
+
+	"B007",
+	"B018",
+	"B032",
+
+	"COM812",
+
+	"C400",
+	"C401",
+	"C402",
+	"C403",
+	"C404",
+
+	"PIE802",
+
+	"T201",
+]
+
+ignore = [
+	"ANN002", # annotations for *args
+	"ANN003", # annotations for **kwargs
+]
+
+cache-dir = "~/.cache/ruff"
+
+format = "grouped"
+
+ignore-fully-untyped = true
