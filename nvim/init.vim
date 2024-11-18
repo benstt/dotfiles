@@ -5,48 +5,34 @@ set shiftwidth=4
 set smarttab
 set softtabstop=4
 set mouse=a
+set expandtab
 set encoding=UTF-8
 set termguicolors
 set undodir=$HOME/.vim/undo
 set undofile
-
-
-" Neovide specific
-if exists("g:neovide")
-	" set guifont=FiraCode\ Nerd\ Font\ Mono:h16:b
-	set guifont=FantasqueSansMono\ Nerd\ Font\ Mono:h16
-	let g:neovide_cursor_vfx_mode = "ripple"
-	let g:neovide_cursor_animation_length=0.05
-endif
+set completeopt=menu,menuone,noselect
+set nowrap
 
 call plug#begin('~/.config/nvim/plugged')
 
 " Tools, colors and stuff
-Plug 'tpope/vim-surround' " Surrounding ysw)
 Plug 'tpope/vim-commentary' " For commenting with gcc & gc
-Plug 'EdenEast/nightfox.nvim' " Fox colors~
 Plug 'windwp/nvim-autopairs' " Autopairs
-Plug 'ixru/nvim-markdown' " Markdown
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'} " Extra syntax highlighting based on ASTs
 Plug 'hrsh7th/nvim-cmp' " Completion
-Plug 'simrat39/rust-tools.nvim' " Rust tools
-Plug 'ray-x/lsp_signature.nvim' " Show function signature when typing
-Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'} " Treesitter
+Plug 'nikolvs/vim-sunbather' " Pink colorscheme
+Plug 'lifepillar/vim-solarized8' " Solarized colorscheme
+Plug 'fcpg/vim-farout' " 'Retro' colorscheme
+Plug 'jansedivy/jai.vim' " Jai support
+Plug 'Tetralux/odin.vim' " Odin support
 Plug 'onsails/lspkind-nvim' " Show icons and type on LSP
-Plug 'lewis6991/gitsigns.nvim' " Git blame etc.
-Plug 'nvim-lua/plenary.nvim' " Lua helper funcs
-Plug 'saecki/crates.nvim', { 'tag': 'v0.3.0' } " Completion for crates.io
+Plug 'chomosuke/typst-preview.nvim', {'tag': 'v0.3.*', 'do': ':TypstPreviewUpdate'} " Typst support
 Plug 'kyazdani42/nvim-web-devicons' " Icons <3
-Plug 'folke/trouble.nvim' " Show pretty diagnostics
 Plug 'folke/lsp-colors.nvim' " More colors!
-Plug 'nvim-lualine/lualine.nvim' " Airline, but pure lua
-Plug 'xiyaowong/nvim-transparent' " Transparent background
-Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.0' } " Fzf but with syntax highlighting!
-Plug 'lukas-reineke/indent-blankline.nvim' " A little line on indents
-Plug 'karb94/neoscroll.nvim' " Smooth scrolling
-Plug 'akinsho/bufferline.nvim', { 'tag': 'v3.*' } " Bar on top
-Plug 'nvim-tree/nvim-tree.lua' " Nerd tree
-Plug 'ziglang/zig.vim' " Zig syntax highlighting
-Plug 'eandrju/cellular-automaton.nvim' " ... :)
+Plug 'ray-x/lsp_signature.nvim' " Show function signature when typing
+Plug 'benstt/alumina.vim'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
 
 " Snippets
 Plug 'hrsh7th/cmp-vsnip' 
@@ -59,21 +45,17 @@ Plug 'hrsh7th/cmp-buffer'
 Plug 'hrsh7th/cmp-path'
 Plug 'hrsh7th/cmp-cmdline'
 
+" C++20 + custom Circle highlighting. I don't use Treesitter for C++, it's too
+" slow.
+Plug 'bfrg/vim-cpp-modern'
+
 call plug#end()
 
-set completeopt=menu,menuone,noselect " Some plugin thingy
-
-colorscheme duskfox
+colorscheme quiet
 
 " Indent left and right
 vmap < <gv
 vmap > >gv
-
-" Use ctrl-[hjkl] to select the active split!
-nnoremap <silent> <c-k> <c-w>k<CR>
-" nnoremap <silent> <c-j> <c-w>j<CR>
-nnoremap <silent> <c-h> <c-w>h<CR>
-nnoremap <silent> <c-l> <c-w>l<CR>
 
 " Go back to normal mode with 'jk'
 inoremap jk <Esc>
@@ -82,42 +64,34 @@ inoremap jk <Esc>
 nmap <Tab><Tab> gcc
 vmap <Tab><Tab> gc
 
+nnoremap gd <C-]>
+inoremap <C-Space> <C-x><C-o>
+
+nnoremap <Space>f :FZF<CR>
+" Search in Jai's code with Space J.
+nnoremap <Space>j :FZF ~/.local/jai/<CR>
+" Search in SDL's code with Space S.
+nnoremap <Space>s :FZF /usr/local/include/SDL3/<CR>
+
 " Space bindings
 " Clear searches
 map <silent> <Space>h :noh<CR>
 
-" Fuzzy search
-nmap <Space><Space> :Telescope find_files<CR>
-" Live grep everything!
-nmap <Space>g :Telescope live_grep<CR>
-
-" Toggle file tree
-nmap <Space><Tab> :NvimTreeToggle<CR>
-
-" Open Trouble
-nnoremap <Space>tt :TroubleToggle<CR>
-
-nmap <Space>fml :CellularAutomaton make_it_rain<CR>
+let g:fzf_layout = { 'down':  '20%'}
 
 :lua <<EOF
-	-- nvim-tree specific
-	vim.g.loaded_netrw = 1
-	vim.g.loaded_netrwPlugin =1
+    vim.loader.enable()
 
-	-- ============ PLUGIN SETUPS ============ -- 
-	require('gitsigns').setup()
-	require('crates').setup()
-	require('trouble').setup()
+    -- ============ PLUGIN SETUPS ============ -- 
 	require('nvim-autopairs').setup()
-	require('rust-tools').setup()
-	require('rust-tools').inlay_hints.enable() -- Enable hints by default
-	require('lualine').setup()
-	require('nvim-tree').setup()
-	require('bufferline').setup({
-		options = {
-			separator_style = "thick"
-		}
-	})
+    require('nvim-treesitter.configs').setup({
+        ensure_installed = { "c" },
+        auto_install = false,
+
+        highlight = {
+            enable = true,    
+        }
+    })
 	require('lsp_signature').setup({
 		bind = true,
 		hint_prefix = "🌼 ",
@@ -125,28 +99,8 @@ nmap <Space>fml :CellularAutomaton make_it_rain<CR>
 			border = "rounded"
 		},
 	})
-	require('nightfox').setup({
-		options = {
-			transparent = true,
-			styles = {
-				comments = "italic",
-				keywords = "bold",
-				types = "bold",
-			}
-		}
-	})
-	require('neoscroll').setup({
-		easing_function = "quadratic"
-	})
-	require('nvim-treesitter.configs').setup({
-		ensure_installed = { "c", "go", "rust" },
 
-		highlight = {
-			enable = true,
-		}
-	})
-
-	local cmp = require('cmp')
+    local cmp = require('cmp')
 	local lspkind = require('lspkind')
 	local cmp_autopairs = require('nvim-autopairs.completion.cmp')
 
@@ -181,24 +135,7 @@ nmap <Space>fml :CellularAutomaton make_it_rain<CR>
 		}
 	})
 
-	-- ============ TRANSPARENT WINDOW ============ --
-	require("transparent").setup({
-		enable = true, -- boolean: enable transparent
-		extra_groups = { -- table/string: additional groups that should be cleared
-			-- In particular, when you set it to 'all', that means all available groups
-
-			-- example of akinsho/nvim-bufferline.lua
-			"BufferLineTabClose",
-			"BufferlineBufferSelected",
-			"BufferLineFill",
-			"BufferLineBackground",
-			"BufferLineSeparator",
-			"BufferLineIndicatorSelected",
-		},
-		exclude = {}, -- table: groups you don't want to clear
-	})
-
-	-- ============ HELPER FUNCS ============ --
+    -- ============ HELPER FUNCS ============ --
 	local has_words_before = function()
 		unpack = unpack or table.unpack
 		local line, col = unpack(vim.api.nvim_win_get_cursor(0))
@@ -217,7 +154,7 @@ nmap <Space>fml :CellularAutomaton make_it_rain<CR>
 
 	-- ============ CMP SETUP ============ --
 	cmp.setup({
-		snippet = {
+        snippet = {
 			expand = function(args)
 				vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
 				-- require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
@@ -242,7 +179,7 @@ nmap <Space>fml :CellularAutomaton make_it_rain<CR>
 			["<Tab>"] = cmp.mapping(function(fallback)
 				if cmp.visible() then
 					cmp.select_next_item()
-				elseif vim.fn["vsnip#available"](1) == 1 then
+                elseif vim.fn["vsnip#available"](1) == 1 then
 					feedkey("<Plug>(vsnip-expand-or-jump)", "")
 				elseif has_words_before() then
 					cmp.complete()
@@ -254,7 +191,7 @@ nmap <Space>fml :CellularAutomaton make_it_rain<CR>
 			["<S-Tab>"] = cmp.mapping(function()
 				if cmp.visible() then
 					cmp.select_prev_item()
-				elseif vim.fn["vsnip#jumpable"](-1) == 1 then
+                elseif vim.fn["vsnip#jumpable"](-1) == 1 then
 					feedkey("<Plug>(vsnip-jump-prev)", "")
 				end
 			end, { "i", "s" }),
@@ -263,9 +200,6 @@ nmap <Space>fml :CellularAutomaton make_it_rain<CR>
 		sources = cmp.config.sources({
 			{ name = 'nvim_lsp' },
 			{ name = 'vsnip' }, -- For vsnip users.
-			-- { name = 'luasnip' }, -- For luasnip users.
-			-- { name = 'ultisnips' }, -- For ultisnips users.
-			-- { name = 'snippy' }, -- For snippy users.
 		}, {
 			{ name = 'buffer' },
 		}),
@@ -313,11 +247,6 @@ nmap <Space>fml :CellularAutomaton make_it_rain<CR>
 		})
 	})
 
-	-- Set up lspconfig.
-	local capabilities = require('cmp_nvim_lsp').default_capabilities()
-	require('lspconfig').rust_analyzer.setup {
-		capabilities = capabilities
-	}
 
 	-- ============ LSP CONFIG SPECIFICS ============ --
 	-- Mappings.
@@ -359,32 +288,30 @@ nmap <Space>fml :CellularAutomaton make_it_rain<CR>
 		debounce_text_changes = 150,
 	}
 
-	-- Rust
-	require('lspconfig')['rust_analyzer'].setup({
-		on_attach = on_attach,
-		flags = lsp_flags,
-		-- Server-specific settings...
-		settings = {
-			["rust-analyzer"] = {}
-		}
-	})
-
-	require('lspconfig')['zls'].setup({
-		on_attach = on_attach,
-		flags = lsp_flags,
-		settings = {
-			["zls"] = {}
-		}
-	})
-
-	require('lspconfig')['pyright'].setup({
-		on_attach = on_attach,
-		flags = lsp_flags,
-		settings = {
-			["pyright"] = {}
-		}
-	})
-
-	require('lspconfig')['gopls'].setup({})
-	require('lspconfig')['clangd'].setup({})
+	-- Set up lspconfig.
+	local capabilities = require('cmp_nvim_lsp').default_capabilities()
+    require('lspconfig')['rust_analyzer'].setup({
+		capabilities = capabilities,
+        on_attach = on_attach,
+        flags = lsp_flags,
+        cmd = {'/home/benstt/.cargo/bin/rust-analyzer'},
+        settings = {
+            ["rust-analyzer"] = {
+                imports = {
+                    granularity = {
+                        group = "module",
+                    },
+                    prefix = "self",
+                },
+                cargo = {
+                    buildScripts = {
+                        enable = true,
+                    },
+                },
+                procMacro = {
+                    enable = true
+                },
+            }
+        }
+    })
 EOF
